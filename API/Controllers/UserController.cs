@@ -6,22 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    
-    public class UserController: BaseApiController
+    public class UserController : BaseApiController
     {
-        private  readonly DataContext _DbContext;
+        private readonly DataContext _DbContext;
         public UserController(DataContext dataContext)
         {
-            _DbContext=dataContext;
+            _DbContext = dataContext;
         }
-        
+
         [HttpGet]
-        public async Task  <ActionResult<IEnumerable<Usuario>>>  ObtenerUsuarios(){
+        public async Task<ActionResult<IEnumerable<Usuario>>> ObtenerUsuarios()
+        {
             return await _DbContext.Usuarios.ToListAsync();
-        }                                                                                                                                                                                                                                           
+        }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> ObtenerUsuario(int id){
+        public async Task<ActionResult<Usuario>> ObtenerUsuario(int id)
+        {
             var user = await _DbContext.Usuarios.FindAsync(id);
 
             if (user == null) return BadRequest("Usuario no existe");

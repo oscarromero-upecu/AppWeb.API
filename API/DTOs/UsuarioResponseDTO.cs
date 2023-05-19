@@ -8,5 +8,6 @@ namespace API.DTOs
     public class UsuarioResponseDTO
     {
         public string Nombre { get; set; }
+        public string Token { get; set; }
     }
 }

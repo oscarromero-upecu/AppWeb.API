@@ -8,20 +8,24 @@ using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entidades;
+using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
-    
+    [AllowAnonymous]
     public class AccountController : BaseApiController
     {
         private readonly DataContext _datacontext;
+        private readonly ITokenServices _tokenService;
 
-        public AccountController(DataContext context)
+        public AccountController(DataContext context, ITokenServices tokenServices)
         {
             _datacontext = context;
+            _tokenService = tokenServices;
         }
 
        [HttpPost("Register")]
@@ -34,7 +38,7 @@ namespace API.Controllers
             using var hmac = new HMACSHA512();
 
             var usuario = new Usuario{
-                Nombre = usuarioDTO.Nombre.ToLower(),
+                Nombre = usuarioDTO.Nombre,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(usuarioDTO.Password)),
                 PasswordSalt = hmac.Key
             };
@@ -44,7 +48,8 @@ namespace API.Controllers
 
             return new UsuarioResponseDTO
             {
-                Nombre = usuario.Nombre
+                Nombre = usuario.Nombre,
+                Token = _tokenService.CrearToken(usuario)
             };
         }
 
@@ -67,7 +72,8 @@ namespace API.Controllers
             }
 
             return new LoginResponseDTO{
-                NombreUsuario = usuario.Nombre
+                NombreUsuario = usuario.Nombre,
+                Token = _tokenService.CrearToken(usuario)
             };
 
 

@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit{
-  title = 'Hola';
+  title = 'Proyecto Angular';
   users: any;
   constructor(private http: HttpClient)  {  }
   //consumimos la api
